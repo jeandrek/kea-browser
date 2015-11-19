@@ -31,13 +31,14 @@ void
 register_schemes(WebKitWebContext *context)
 {
   webkit_web_context_register_uri_scheme(context, "about",
-                                         (WebKitURISchemeRequestCallback)about_protocol_request,
-                                         NULL, NULL);
+                        (WebKitURISchemeRequestCallback)about_protocol_request,
+                        NULL, NULL);
 }
 
 void
 about_protocol_request(WebKitURISchemeRequest * request, gpointer data)
 {
+  g_warning("yey it works:DD");
   GInputStream *stream;
   size_t length;
   const char *path;

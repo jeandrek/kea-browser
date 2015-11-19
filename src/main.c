@@ -72,7 +72,7 @@ main(int argc, char **argv)
   // create the webview
   web_view = webkit_web_view_new();
 
-  context = webkit_web_view_get_context(WEBKIT_WEB_VIEW(web_view));
+  context = webkit_web_context_get_default();
   register_schemes(context);
 
   g_signal_connect(web_view, "close", G_CALLBACK(web_view_close), NULL);
