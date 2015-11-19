@@ -1,5 +1,6 @@
 Makefile
 src/Makefile
+*.o
 config.h
 config.h.in
 config.log
