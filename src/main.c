@@ -77,14 +77,14 @@ main(int argc, char **argv)
 
   g_signal_connect(web_view, "close", G_CALLBACK(web_view_close), NULL);
   g_signal_connect(web_view, "load-changed", G_CALLBACK(web_view_load_changed), NULL);
-  
+
   gtk_box_pack_start(GTK_BOX(box), web_view,
                      TRUE, TRUE, 0);
   gtk_widget_show(web_view);
 
   gtk_widget_show(main_window);
 
-  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), "about:home");
+  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), "about:home.html");
 
   gtk_main();
   return 0;

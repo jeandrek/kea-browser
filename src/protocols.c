@@ -48,6 +48,7 @@ about_protocol_request(WebKitURISchemeRequest * request, gpointer data)
   path = webkit_uri_scheme_request_get_path(request);
   g_strlcpy(filename, "file://" DATA_DIR "/", 64);
   g_strlcat(filename, path, 64);
+  g_warning("%s, %s", filename, path);
 
   GError *err = NULL;
   if(!g_file_get_contents(filename, &contents, &length, &err)) {
