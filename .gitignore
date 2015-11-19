@@ -1,6 +1,7 @@
 Makefile
 src/Makefile
 *.o
+*.Po
 src/kea
 config.h
 config.h.in
