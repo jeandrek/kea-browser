@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=0.1.0
+Type=Application
+Name=Kea
+Exec=kea
+Comment=Kea Web Browser
+Icon=
+Terminal=false
+
