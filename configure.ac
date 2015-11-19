@@ -1,4 +1,4 @@
-AC_INIT([kea], [0.1.0])
+AC_INIT([kea], [0.1.2])
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE

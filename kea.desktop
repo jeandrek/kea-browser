@@ -6,4 +6,4 @@ Exec=kea
 Comment=Kea Web Browser
 Icon=
 Terminal=false
-
+Category=Network
