@@ -30,9 +30,9 @@
 void
 register_schemes(WebKitWebContext *context)
 {
-  webkit_web_context_register_uri_schemes(context, "about",
-                                          (WebKitURISchemeRequestCallback)about_protocol_request,
-                                          NULL, NULL);
+  webkit_web_context_register_uri_scheme(context, "about",
+                                         (WebKitURISchemeRequestCallback)about_protocol_request,
+                                         NULL, NULL);
 }
 
 void
@@ -46,18 +46,18 @@ about_protocol_request(WebKitURISchemeRequest * request, gpointer data)
   char filename[64];
 
   path = webkit_uri_scheme_request_get_path(request);
-  g_strlcpy(filename, "file://" DATA_DIR "/", 64)
+  g_strlcpy(filename, "file://" DATA_DIR "/", 64);
   g_strlcat(filename, path, 64);
 
   GError *err = NULL;
   if(!g_file_get_contents(filename, &contents, &length, &err)) {
     g_warning("%s", err->message);
-    webkit_uri_scheme_finish_error(request, err);
+    webkit_uri_scheme_request_finish_error(request, err);
     g_error_free(err);
     return;
   }
   stream = g_memory_input_stream_new_from_data(contents, length, g_free);
   g_strlcpy(mimetype, "text/html", 32);
 
-  webkit_uri_scheme_finish(request, stream, length, mimetype);
+  webkit_uri_scheme_request_finish(request, stream, length, mimetype);
 }
