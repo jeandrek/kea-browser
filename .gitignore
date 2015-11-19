@@ -5,7 +5,7 @@ config.h
 config.h.in
 config.log
 config.status
-autom4te.cache/*
+autom4te.cache
 Makefile.in
 src/Makefile.in
 configure
