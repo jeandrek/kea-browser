@@ -25,6 +25,7 @@
 #include <webkit2/webkit2.h>
 
 #include "../config.h"
+#include "protocols.h"
 
 void go(GtkWidget *widget, gpointer data);
 void go_back(GtkWidget *widget, gpointer data);
@@ -38,6 +39,7 @@ GtkWidget *entry_url_bar;
 GtkWidget *spinner_loading;
 GtkWidget *box;
 GtkWidget *web_view;
+WebKitWebContext *context;
 
 int
 main(int argc, char **argv)
@@ -51,7 +53,7 @@ main(int argc, char **argv)
   GError *err = NULL;
   if(!gtk_builder_add_from_file(builder, DATA_DIR "/gui.glade", &err)) {
     g_warning("%s", err->message);
-    g_free(err);
+    g_error_free(err);
     return 1;
   }
 
@@ -69,6 +71,8 @@ main(int argc, char **argv)
 
   // create the webview
   web_view = webkit_web_view_new();
+  context = webkit_web_view_get_context(WEBKIT_WEB_VIEW(web_view));
+  register_schemes(context);
   g_signal_connect(web_view, "close", G_CALLBACK(web_view_close), NULL);
   g_signal_connect(web_view, "load-changed", G_CALLBACK(web_view_load_changed), NULL);
   gtk_box_pack_start(GTK_BOX(box), web_view,
@@ -77,7 +81,7 @@ main(int argc, char **argv)
 
   gtk_widget_show(main_window);
 
-  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), "file://" DATA_DIR "/home.html");
+  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), "about:home");
 
   gtk_main();
   return 0;
