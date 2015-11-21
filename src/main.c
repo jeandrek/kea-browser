@@ -84,7 +84,7 @@ main(int argc, char **argv)
 
   gtk_widget_show(main_window);
 
-  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), "about:home.html");
+  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), "file://" DATA_DIR "/home.html");
 
   gtk_main();
   return 0;

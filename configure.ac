@@ -20,5 +20,6 @@ AC_DEFINE_UNQUOTED([MAX_URI_SIZE], [2048], [Maximum URI size])
 AC_CONFIG_FILES([
   Makefile
   src/Makefile
+  pixmaps/Makefile
 ])
 AC_OUTPUT
