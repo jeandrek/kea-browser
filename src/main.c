@@ -87,6 +87,7 @@ main(int argc, char **argv)
   webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), "file://" DATA_DIR "/home.html");
 
   gtk_main();
+
   return 0;
 }
 

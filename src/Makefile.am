@@ -7,3 +7,5 @@ kea_LDADD = $(GTK30_LIBS) $(WEBKIT2GTK40_LIBS)
 
 keadir = $(datadir)/kea
 dist_kea_DATA = gui.glade html/*
+
+EXTRA_DIST = protocols.h
