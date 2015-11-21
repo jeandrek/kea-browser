@@ -4,6 +4,6 @@ Type=Application
 Name=Kea
 Exec=kea
 Comment=Kea Web Browser
-Icon=
+Icon=kea
 Terminal=false
 Category=Network
