@@ -40,6 +40,7 @@ GtkWidget *spinner_loading;
 GtkWidget *box;
 GtkWidget *web_view;
 WebKitWebContext *context;
+WebKitWebSettings *settings;
 
 int
 main(int argc, char **argv)
@@ -75,6 +76,33 @@ main(int argc, char **argv)
   context = webkit_web_context_get_default();
   register_schemes(context);
 
+  char user_agent[64];
+
+#define SYSTEM ""
+#define WEBKIT_REVISION WEBKIT_MAJOR_VERSION "." WEBKIT_MINOR_VERSION
+
+#if defined(_WIN64)
+#define SYSTEM "Windows NT; Win64; x64"
+#elif defined(_WIN32)
+#define SYSTEM "Windows NT"
+#elif defined(__linux__)
+#if defined(__x86_64__) || defined(_M_X64)
+#define SYSTEM "Linux x86_64"
+#else
+#define SYSTEM "Linux"
+#endif // __x86_64__ || _M_X64
+
+#endif // _WIN64
+
+  g_strlcpy(user_agent,
+            "Mozilla/5.0 (" SYSTEM ") AppleWebKit/" WEBKIT_REVISION
+            " (KHTML, like Gecko) Kea/" VERSION " Safari/" WEBKIT_REVISION,
+            64);
+#undef SYSTEM
+
+  settings = webkit_web_view_get_settings(WEBKIT_WEB_VIEW(web_view));
+  g_object_set_property(G_OBJECT(settings), "user-agent", &user_agent, NULL);
+
   g_signal_connect(web_view, "close", G_CALLBACK(web_view_close), NULL);
   g_signal_connect(web_view, "load-changed", G_CALLBACK(web_view_load_changed), NULL);
 
@@ -84,7 +112,7 @@ main(int argc, char **argv)
 
   gtk_widget_show(main_window);
 
-  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), "file://" DATA_DIR "/home.html");
+  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), "http://jonathan50.github.io/kea-browser/");
 
   gtk_main();
 
