@@ -1,6 +1,5 @@
 package
 {
-
 import flash.display.*;
 import flash.text.*;
 
