@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="icon" type="image/png" href="favicon.png">
     <script src="main.js" type="text/javascript"></script>
-    <title>Kea Browser</title>
+    <title>Kea Browser | Tests</title>
   </head>
   <body>
     <a href="https://github.com/Jonathan50/kea-browser">
@@ -18,37 +18,23 @@
     </header>
     <div id="content" class="shadow">
       <section>
-        <h2>About Kea</h2>
-        <p>
-          Kea is a lightweight web browser based on the open-source
-          <a href="http://webkit.org/">WebKit</a>
-          rendering engine.<br>
-          I'm making Kea mainly for fun and learning about browsers.<br>
-        </p>
-      </section>
-      <section>
-        <h2>Source code</h2>
-        <p>
-          Go to the GitHub repository at
-          <a href="https://github.com/Jonathan50/kea-browser">https://github.com/Jonathan50/kea-browser</a>.
-        </p>
-      </section>
-      <section>
-        <h2>Using Kea?</h2>
-        <p>
-          <p>
-            You are
-            <script type="text/javascript">
-            document.write(
-              navigator.userAgent.indexOf("Kea/") > 0 ? '<b>using Kea</b>!':'<b>not using kea</b>.'
-            )
-            </script>
-          </p>
-          <p>
-            Your user agent is:<br>
-            <code id="ua"><script type="text/javascript">document.write(navigator.userAgent)</script></code>
-          </p>
-        </p>
+        <h1>Tests</h2>
+        <section>
+          <h2>JavaScript</h2>
+          <a href="#" onclick="alert('Text')">Alert</a><br>
+          <a href="#" onclick="prompt('Text', 'Placeholder text')">Prompt</a><br>
+        </section>
+        <section>
+          <h2>External URIs</h2>
+          <a href="mailto:foo@example.org">mailto</a><br>
+          <a href="skype:echo123?call">skype</a><br>
+        </section>
+        <section>
+          <h2>Adobe Flash</h2>
+          <object data="Test.swf" type="application/x-shockwave-flash" width="256" height="128">
+            <param name="movie" value="Test.swf">
+          </object>
+        </section>
       </section>
       <hr>
       <footer>

@@ -13,7 +13,7 @@ h1 {
   text-align: center;
 }
 
-div#logo > img {
+div#logo img {
   display: block;
   margin-left: auto;
   margin-right: auto;
