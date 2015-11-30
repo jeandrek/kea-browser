@@ -78,7 +78,8 @@ main(int argc, char **argv)
 
   gtk_builder_add_callback_symbols(builder, "go", G_CALLBACK(go),
                                    "go_back", G_CALLBACK(go_back),
-                                   "go_forward", G_CALLBACK(go_forward), NULL);
+                                   "go_forward", G_CALLBACK(go_forward),
+                                   "delete_event", G_CALLBACK(delete_event), NULL);
   gtk_builder_connect_signals(builder, NULL);
   g_object_unref(G_OBJECT(builder));
 
