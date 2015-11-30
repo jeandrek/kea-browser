@@ -27,27 +27,20 @@
 #include "../config.h"
 #include "protocols.h"
 
-void
-register_schemes(WebKitWebContext *context)
-{
-  webkit_web_context_register_uri_scheme(context, "about",
-                        (WebKitURISchemeRequestCallback)about_protocol_request,
-                        NULL, NULL);
-}
-
-void
-about_protocol_request(WebKitURISchemeRequest * request, gpointer data)
+static void
+about_protocol_request(WebKitURISchemeRequest *request, gpointer data)
 {
   g_warning("yey it works:DD");
   GInputStream *stream;
   size_t length;
   const char *path;
   char *contents;
-  char mimetype[32];
   char filename[64];
 
+  g_object_ref(request);
+
   path = webkit_uri_scheme_request_get_path(request);
-  g_strlcpy(filename, "file://" DATA_DIR "/", 64);
+  g_strlcpy(filename, DATA_DIR "/", 64);
   g_strlcat(filename, path, 64);
   g_warning("%s, %s", filename, path);
 
@@ -59,7 +52,16 @@ about_protocol_request(WebKitURISchemeRequest * request, gpointer data)
     return;
   }
   stream = g_memory_input_stream_new_from_data(contents, length, g_free);
-  g_strlcpy(mimetype, "text/html", 32);
 
-  webkit_uri_scheme_request_finish(request, stream, length, mimetype);
+  webkit_uri_scheme_request_finish(request, stream, length, "text/html");
+  g_object_unref(G_OBJECT(stream));
+}
+
+void
+register_schemes(WebKitWebContext *context)
+{
+  webkit_web_context_register_uri_scheme(context, "about",
+                                         about_protocol_request,
+                                         NULL, NULL);
+  g_warning("plz work plz work :O");
 }

@@ -40,15 +40,26 @@ GtkWidget *entry_url_bar;
 GtkWidget *spinner_loading;
 GtkWidget *box;
 GtkWidget *web_view;
-WebKitWebContext *context;
 WebKitSettings *settings;
+int kiosk = 0;
 
 int
 main(int argc, char **argv)
 {
+  char *start_page;
   GtkBuilder *builder;
 
   gtk_init(&argc, &argv);
+
+  for(int i = 0; i < argc; i++) {
+    if(argv[i][0] != '-')
+      start_page = argv[i];
+    if(g_strcmp0(argv[i], "--kiosk") == 0) { // kiosk mode
+      kiosk = 1;
+    }
+  }
+  if(start_page[0] != '\0')
+    start_page = (char *)"http://jonathan50.github.io/kea-browser/";
 
   // load the interface
   builder = gtk_builder_new();
@@ -74,8 +85,7 @@ main(int argc, char **argv)
   // create the webview
   web_view = webkit_web_view_new();
 
-  context = webkit_web_context_get_default();
-  register_schemes(context);
+  register_schemes(webkit_web_context_get_default());
 
   settings = webkit_web_view_get_settings(WEBKIT_WEB_VIEW(web_view));
   webkit_settings_set_user_agent_with_application_details(settings, "Kea", VERSION);
@@ -89,7 +99,10 @@ main(int argc, char **argv)
 
   gtk_widget_show(main_window);
 
-  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), "http://jonathan50.github.io/kea-browser/");
+  if(kiosk)
+    gtk_window_fullscreen(GTK_WINDOW(main_window));
+
+  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), start_page);
 
   gtk_main();
 
@@ -148,11 +161,14 @@ web_view_load_changed(GtkWidget *widget, WebKitLoadEvent load_event, gpointer da
 void
 web_view_close(GtkWidget *widget, GtkWidget *window)
 {
-  gtk_widget_destroy(window);
+  if(!kiosk)
+    gtk_widget_destroy(window);
 }
 
 gboolean
 delete_event(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
+  if(kiosk)
+    return TRUE;
   return FALSE;
 }

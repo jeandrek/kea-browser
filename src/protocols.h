@@ -23,6 +23,5 @@
 #define PROTOCOLS_H
 
 void register_schemes(WebKitWebContext *context);
-void about_protocol_request(WebKitURISchemeRequest * request, gpointer data);
 
 #endif // PROTOCOLS_H
