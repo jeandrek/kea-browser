@@ -53,13 +53,19 @@ main(int argc, char **argv)
   gtk_init(&argc, &argv);
 
   for(int i = 0; i < argc; i++) {
-    if(argv[i][0] != '-')
+    if(argv[i][0] != '-') {
       start_page = argv[i];
-    if(g_strcmp0(argv[i], "--kiosk") == 0) { // kiosk mode
-      kiosk = 1;
+      continue;
     }
+
+    if(g_strcmp0(argv[i], "--kiosk") == 0 ||
+       g_strcmp0(argv[i], "-k") == 0) { // kiosk mode
+      kiosk = 1;
+      continue;
+    }
+    printf("%s: unrecognized option '%s'\n", argv[0], argv[i]);
   }
-  if(start_page[0] != '\0')
+  if(start_page[0] == '\0')
     start_page = (char *)"http://jonathan50.github.io/kea-browser/";
 
   // load the interface
@@ -145,10 +151,8 @@ void
 change_current_tab(GtkWidget *widget, int index, gpointer data)
 {
   gtk_entry_set_text(GTK_ENTRY(entry_url_bar),
-                     webkit_web_view_get_uri(
-                       WEBKIT_WEB_VIEW(gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabs),
-                                                                 index))
-                     ));
+                     webkit_web_view_get_uri(WEBKIT_WEB_VIEW(gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabs),
+                                                                                       index))));
 }
 
 // navigate to a page
