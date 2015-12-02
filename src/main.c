@@ -28,6 +28,8 @@
 #include "../config.h"
 #include "protocols.h"
 
+void make_tab(GtkNotebook *notebook, char *uri);
+
 void go(GtkWidget *widget, gpointer data);
 void go_back(GtkWidget *widget, gpointer data);
 void go_forward(GtkWidget *widget, gpointer data);
@@ -38,8 +40,7 @@ gboolean delete_event(GtkWidget *widget, GdkEvent *event, gpointer data);
 GtkWidget *main_window;
 GtkWidget *entry_url_bar;
 GtkWidget *spinner_loading;
-GtkWidget *box;
-GtkWidget *web_view;
+GtkWidget *tabs;
 WebKitSettings *settings;
 int kiosk = 0;
 
@@ -74,7 +75,7 @@ main(int argc, char **argv)
   main_window     = GTK_WIDGET(gtk_builder_get_object(builder, "main_window"));
   entry_url_bar   = GTK_WIDGET(gtk_builder_get_object(builder, "entry_url_bar"));
   spinner_loading = GTK_WIDGET(gtk_builder_get_object(builder, "spinner_loading"));
-  box             = GTK_WIDGET(gtk_builder_get_object(builder, "box"));
+  tabs            = GTK_WIDGET(gtk_builder_get_object(builder, "tabs"));
 
   gtk_builder_add_callback_symbols(builder, "go", G_CALLBACK(go),
                                    "go_back", G_CALLBACK(go_back),
@@ -83,7 +84,27 @@ main(int argc, char **argv)
   gtk_builder_connect_signals(builder, NULL);
   g_object_unref(G_OBJECT(builder));
 
-  // create the webview
+  // make the first tab
+  make_tab(GTK_NOTEBOOK(tabs), start_page);
+
+  gtk_widget_show(main_window);
+
+  if(kiosk)
+    gtk_window_fullscreen(GTK_WINDOW(main_window));
+
+  gtk_main();
+
+  return 0;
+}
+
+// make a new tab
+void
+make_tab(GtkNotebook *notebook, char *uri)
+{
+  GtkWidget *web_view;
+  GtkWidget *label;
+  GtkWidget *close_button;
+
   web_view = webkit_web_view_new();
 
   register_schemes(webkit_web_context_get_default());
@@ -94,20 +115,20 @@ main(int argc, char **argv)
   g_signal_connect(web_view, "close", G_CALLBACK(web_view_close), NULL);
   g_signal_connect(web_view, "load-changed", G_CALLBACK(web_view_load_changed), NULL);
 
-  gtk_box_pack_start(GTK_BOX(box), web_view,
+  label = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+  gtk_box_pack_start(GTK_BOX(label), gtk_label_new("Sampletext"),
                      TRUE, TRUE, 0);
+  close_button = gtk_button_new_from_icon_name("gtk-close",
+                                               GTK_ICON_SIZE_MENU);
+  gtk_button_set_relief(GTK_BUTTON(close_button), GTK_RELIEF_NONE);
+  gtk_box_pack_start(GTK_BOX(label), close_button,
+                     FALSE, FALSE, 0);
+
   gtk_widget_show(web_view);
+  gtk_widget_show_all(label);
+  gtk_notebook_append_page(GTK_NOTEBOOK(notebook), web_view, label);
 
-  gtk_widget_show(main_window);
-
-  if(kiosk)
-    gtk_window_fullscreen(GTK_WINDOW(main_window));
-
-  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), start_page);
-
-  gtk_main();
-
-  return 0;
+  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), uri);
 }
 
 // navigate to a page
@@ -118,23 +139,23 @@ go(GtkWidget *widget, gpointer data)
   g_strlcpy(uri, gtk_entry_get_text(GTK_ENTRY(entry_url_bar)), MAX_URI_SIZE);
   // if the URL is "", just reload the current page
   if(g_strcmp0("", uri) == 0) {
-    g_strlcpy(uri, webkit_web_view_get_uri(WEBKIT_WEB_VIEW(web_view)), MAX_URI_SIZE);
+    g_strlcpy(uri, webkit_web_view_get_uri(WEBKIT_WEB_VIEW(widget)), MAX_URI_SIZE);
   }
 
-  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), uri);
+  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(widget), uri);
 }
 
 // go backwards/forwards
 void
 go_back(GtkWidget *widget, gpointer data) {
-  if(webkit_web_view_can_go_back(WEBKIT_WEB_VIEW(web_view))) {
-    webkit_web_view_go_back(WEBKIT_WEB_VIEW(web_view));
+  if(webkit_web_view_can_go_back(WEBKIT_WEB_VIEW(widget))) {
+    webkit_web_view_go_back(WEBKIT_WEB_VIEW(widget));
   }
 }
 void
 go_forward(GtkWidget *widget, gpointer data) {
-  if(webkit_web_view_can_go_forward(WEBKIT_WEB_VIEW(web_view))) {
-    webkit_web_view_go_forward(WEBKIT_WEB_VIEW(web_view));
+  if(webkit_web_view_can_go_forward(WEBKIT_WEB_VIEW(widget))) {
+    webkit_web_view_go_forward(WEBKIT_WEB_VIEW(widget));
   }
 }
 
@@ -145,12 +166,12 @@ web_view_load_changed(GtkWidget *widget, WebKitLoadEvent load_event, gpointer da
   switch(load_event) {
   case WEBKIT_LOAD_STARTED:
     gtk_entry_set_text(GTK_ENTRY(entry_url_bar),
-                       webkit_web_view_get_uri(WEBKIT_WEB_VIEW(web_view)));
+                       webkit_web_view_get_uri(WEBKIT_WEB_VIEW(widget)));
     gtk_spinner_start(GTK_SPINNER(spinner_loading));
     break;
   case WEBKIT_LOAD_REDIRECTED:
     gtk_entry_set_text(GTK_ENTRY(entry_url_bar),
-                       webkit_web_view_get_uri(WEBKIT_WEB_VIEW(web_view)));
+                       webkit_web_view_get_uri(WEBKIT_WEB_VIEW(widget)));
     break;
   case WEBKIT_LOAD_FINISHED:
     gtk_spinner_stop(GTK_SPINNER(spinner_loading));
