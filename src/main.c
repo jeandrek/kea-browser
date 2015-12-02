@@ -174,6 +174,11 @@ go_forward(GtkWidget *widget, gpointer data) {
 void
 web_view_load_changed(GtkWidget *widget, WebKitLoadEvent load_event, gpointer data)
 {
+  // if this is not the active tab do nothing
+  if(gtk_notebook_page_num(GTK_NOTEBOOK(tabs), widget) !=
+     gtk_notebook_get_current_page(GTK_NOTEBOOK(tabs)))
+    return;
+
   switch(load_event) {
   case WEBKIT_LOAD_STARTED:
     gtk_entry_set_text(GTK_ENTRY(entry_url_bar),
