@@ -114,7 +114,6 @@
           <object class="GtkNotebook" id="tabs">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <signal name="change-current-page" handler="change_current_tab" swapped="no"/>
           </object>
           <packing>
             <property name="expand">True</property>

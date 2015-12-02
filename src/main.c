@@ -30,6 +30,7 @@
 
 void make_tab(GtkNotebook *notebook, char *uri);
 void remove_tab(GtkWidget *widget, gpointer data);
+void change_current_tab(GtkWidget *widget, int index, gpointer data);
 void go(GtkWidget *widget, gpointer data);
 void go_back(GtkWidget *widget, gpointer data);
 void go_forward(GtkWidget *widget, gpointer data);
@@ -80,6 +81,7 @@ main(int argc, char **argv)
   gtk_builder_add_callback_symbols(builder, "go", G_CALLBACK(go),
                                    "go_back", G_CALLBACK(go_back),
                                    "go_forward", G_CALLBACK(go_forward),
+                                   "change_current_tab", G_CALLBACK(change_current_tab),
                                    "delete_event", G_CALLBACK(delete_event), NULL);
   gtk_builder_connect_signals(builder, NULL);
   g_object_unref(G_OBJECT(builder));
@@ -139,12 +141,24 @@ remove_tab(GtkWidget *widget, gpointer data)
   // grrr
 }
 
+// update URL bar on switching tab
+void
+change_current_tab(GtkWidget *widget, int index, gpointer data)
+{
+  gtk_entry_set_text(GTK_ENTRY(entry_url_bar),
+                     webkit_web_view_get_uri(
+                       WEBKIT_WEB_VIEW(gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabs),
+                                                                 index))
+                     ));
+}
+
 // navigate to a page
 void
 go(GtkWidget *widget, gpointer data)
 {
   char uri[MAX_URI_SIZE];
   WebKitWebView *web_view;
+  // get current WebKitWebView
   web_view = WEBKIT_WEB_VIEW(gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabs),
                                                        gtk_notebook_get_current_page(GTK_NOTEBOOK(tabs))));
   g_strlcpy(uri, gtk_entry_get_text(GTK_ENTRY(entry_url_bar)), MAX_URI_SIZE);
@@ -199,7 +213,8 @@ web_view_load_changed(GtkWidget *widget, WebKitLoadEvent load_event, gpointer da
 void
 web_view_close(GtkWidget *widget, GtkWidget *window)
 {
-  gtk_notebook_remove_page(GTK_NOTEBOOK(tabs), gtk_notebook_page_num(GTK_NOTEBOOK(tabs), widget));
+  gtk_notebook_remove_page(GTK_NOTEBOOK(tabs),
+                           gtk_notebook_page_num(GTK_NOTEBOOK(tabs), widget));
 }
 
 gboolean
