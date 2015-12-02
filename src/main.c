@@ -118,7 +118,7 @@ make_tab(GtkNotebook *notebook, char *uri)
   g_signal_connect(web_view, "load-changed", G_CALLBACK(web_view_load_changed), NULL);
 
   label = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-  gtk_box_pack_start(GTK_BOX(label), gtk_label_new("Sampletext"),
+  gtk_box_pack_start(GTK_BOX(label), gtk_label_new(""),
                      TRUE, TRUE, 0);
   close_button = gtk_button_new_from_icon_name("gtk-close",
                                                GTK_ICON_SIZE_MENU);
@@ -184,7 +184,7 @@ go_forward(GtkWidget *widget, gpointer data) {
   }
 }
 
-// update the URL bar on navigation
+// update the URL bar and tab title on navigation
 void
 web_view_load_changed(GtkWidget *widget, WebKitLoadEvent load_event, gpointer data)
 {
@@ -195,10 +195,7 @@ web_view_load_changed(GtkWidget *widget, WebKitLoadEvent load_event, gpointer da
 
   switch(load_event) {
   case WEBKIT_LOAD_STARTED:
-    gtk_entry_set_text(GTK_ENTRY(entry_url_bar),
-                       webkit_web_view_get_uri(WEBKIT_WEB_VIEW(widget)));
     gtk_spinner_start(GTK_SPINNER(spinner_loading));
-    break;
   case WEBKIT_LOAD_REDIRECTED:
     gtk_entry_set_text(GTK_ENTRY(entry_url_bar),
                        webkit_web_view_get_uri(WEBKIT_WEB_VIEW(widget)));
@@ -207,6 +204,16 @@ web_view_load_changed(GtkWidget *widget, WebKitLoadEvent load_event, gpointer da
     gtk_spinner_stop(GTK_SPINNER(spinner_loading));
     break;
   }
+  
+  const char *title;
+  title = webkit_web_view_get_title(WEBKIT_WEB_VIEW(widget));
+  if(title == NULL)
+    title = webkit_web_view_get_uri(WEBKIT_WEB_VIEW(widget));
+
+  GtkWidget *label;
+  label = gtk_notebook_get_tab_label(GTK_NOTEBOOK(tabs), widget);
+  gtk_label_set_text(GTK_LABEL(gtk_container_get_children(GTK_CONTAINER(label))->data),
+                     title);
 }
 
 // close the window/tab from JavaScript
