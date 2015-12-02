@@ -145,8 +145,8 @@ go(GtkWidget *widget, gpointer data)
 {
   char uri[MAX_URI_SIZE];
   WebKitWebView *web_view;
-  web_view = gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabs),
-                                       gtk_notebook_get_current_page(GTK_NOTEBOOK(tabs)));
+  web_view = WEBKIT_WEB_VIEW(gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabs),
+                                                       gtk_notebook_get_current_page(GTK_NOTEBOOK(tabs))));
   g_strlcpy(uri, gtk_entry_get_text(GTK_ENTRY(entry_url_bar)), MAX_URI_SIZE);
   // if the URL is "", just reload the current page
   if(g_strcmp0("", uri) == 0) {
