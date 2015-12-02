@@ -3,6 +3,7 @@
 <interface>
   <requires lib="gtk+" version="3.12"/>
   <object class="GtkWindow" id="main_window">
+    <property name="name">0</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Kea Browser</property>
     <property name="default_width">1024</property>
@@ -14,6 +15,10 @@
       <object class="GtkBox" id="box">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="margin_left">4</property>
+        <property name="margin_right">4</property>
+        <property name="margin_top">4</property>
+        <property name="margin_bottom">4</property>
         <property name="orientation">vertical</property>
         <property name="spacing">4</property>
         <child>
