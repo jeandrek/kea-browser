@@ -29,7 +29,7 @@
 #include "protocols.h"
 
 void make_tab(GtkNotebook *notebook, char *uri);
-
+void remove_tab(GtkWidget *widget, gpointer data);
 void go(GtkWidget *widget, gpointer data);
 void go_back(GtkWidget *widget, gpointer data);
 void go_forward(GtkWidget *widget, gpointer data);
@@ -121,6 +121,7 @@ make_tab(GtkNotebook *notebook, char *uri)
   close_button = gtk_button_new_from_icon_name("gtk-close",
                                                GTK_ICON_SIZE_MENU);
   gtk_button_set_relief(GTK_BUTTON(close_button), GTK_RELIEF_NONE);
+  g_signal_connect(close_button, "clicked", G_CALLBACK(remove_tab), NULL);
   gtk_box_pack_start(GTK_BOX(label), close_button,
                      FALSE, FALSE, 0);
 
@@ -131,18 +132,28 @@ make_tab(GtkNotebook *notebook, char *uri)
   webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), uri);
 }
 
+// remove a tab
+void
+remove_tab(GtkWidget *widget, gpointer data)
+{
+  // grrr
+}
+
 // navigate to a page
 void
 go(GtkWidget *widget, gpointer data)
 {
   char uri[MAX_URI_SIZE];
+  WebKitWebView *web_view;
+  web_view = gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabs),
+                                       gtk_notebook_get_current_page(GTK_NOTEBOOK(tabs)));
   g_strlcpy(uri, gtk_entry_get_text(GTK_ENTRY(entry_url_bar)), MAX_URI_SIZE);
   // if the URL is "", just reload the current page
   if(g_strcmp0("", uri) == 0) {
-    g_strlcpy(uri, webkit_web_view_get_uri(WEBKIT_WEB_VIEW(widget)), MAX_URI_SIZE);
+    g_strlcpy(uri, webkit_web_view_get_uri(web_view), MAX_URI_SIZE);
   }
 
-  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(widget), uri);
+  webkit_web_view_load_uri(web_view, uri);
 }
 
 // go backwards/forwards
@@ -179,12 +190,11 @@ web_view_load_changed(GtkWidget *widget, WebKitLoadEvent load_event, gpointer da
   }
 }
 
-// close the window from JavaScript
+// close the window/tab from JavaScript
 void
 web_view_close(GtkWidget *widget, GtkWidget *window)
 {
-  if(!kiosk)
-    gtk_widget_destroy(window);
+  gtk_notebook_remove_page(GTK_NOTEBOOK(tabs), gtk_notebook_page_num(GTK_NOTEBOOK(tabs), widget));
 }
 
 gboolean
