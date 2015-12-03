@@ -58,12 +58,11 @@ main(int argc, char **argv)
       continue;
     }
 
-    if(g_strcmp0(argv[i], "--kiosk") == 0 ||
-       g_strcmp0(argv[i], "-k") == 0) { // kiosk mode
+    if(g_strcmp0(argv[i], "--kiosk") == 0) { // kiosk mode
       kiosk = 1;
-      continue;
+    } else {
+      printf("%s: unrecognized option '%s'\n", argv[0], argv[i]);
     }
-    printf("%s: unrecognized option '%s'\n", argv[0], argv[i]);
   }
   if(start_page[0] == '\0')
     start_page = (char *)"http://jonathan50.github.io/kea-browser/";
@@ -176,14 +175,22 @@ go(GtkWidget *widget, gpointer data)
 // go backwards/forwards
 void
 go_back(GtkWidget *widget, gpointer data) {
-  if(webkit_web_view_can_go_back(WEBKIT_WEB_VIEW(widget))) {
-    webkit_web_view_go_back(WEBKIT_WEB_VIEW(widget));
+  WebKitWebView *web_view;
+  // get current WebKitWebView
+  web_view = WEBKIT_WEB_VIEW(gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabs),
+                                                       gtk_notebook_get_current_page(GTK_NOTEBOOK(tabs))));
+  if(webkit_web_view_can_go_back(WEBKIT_WEB_VIEW(web_view))) {
+    webkit_web_view_go_back(WEBKIT_WEB_VIEW(web_view));
   }
 }
 void
 go_forward(GtkWidget *widget, gpointer data) {
-  if(webkit_web_view_can_go_forward(WEBKIT_WEB_VIEW(widget))) {
-    webkit_web_view_go_forward(WEBKIT_WEB_VIEW(widget));
+  WebKitWebView *web_view;
+  // get current WebKitWebView
+  web_view = WEBKIT_WEB_VIEW(gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabs),
+                                                       gtk_notebook_get_current_page(GTK_NOTEBOOK(tabs))));
+  if(webkit_web_view_can_go_forward(WEBKIT_WEB_VIEW(web_view))) {
+    webkit_web_view_go_forward(WEBKIT_WEB_VIEW(web_view));
   }
 }
 
