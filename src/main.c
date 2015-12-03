@@ -52,7 +52,7 @@ main(int argc, char **argv)
 
   gtk_init(&argc, &argv);
 
-  for(int i = 0; i < argc; i++) {
+  for(int i = 1; i < argc; i++) {
     if(argv[i][0] != '-') {
       start_page = argv[i];
       continue;
