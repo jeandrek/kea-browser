@@ -1,7 +1,7 @@
 #!/bin/bash
 #This is a shell script created by hiccup01 to install kea on Mac OSX.
 VERSION="0.0.1" #Installer version
-BVERSION="0.2.2" #Browser version
+BVERSION="0.2.3" #Browser version
 echo "Thanks for installing kea"
 echo "You are running Mac OSX kea installer version $VERSION for kea version $BVERSION."
 echo "This installer was created by hiccup01 (hiccup01.com)"
