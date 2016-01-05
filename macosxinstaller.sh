@@ -1,5 +1,6 @@
 #!/bin/bash
 #This is a shell script created by hiccup01 to install kea on Mac OSX.
+#The first digit of the version number will always be the first digit of the browser version number.
 VERSION="0.0.1" #Installer version
 BVERSION="0.2.3" #Browser version
 echo "Thanks for installing kea"
