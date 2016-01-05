@@ -46,6 +46,7 @@ echo "Downloading kea."
 wget https://github.com/Jonathan50/kea-browser/releases/download/v$BVERSION/kea-$BVERSION.tar.gz
 echo "Unziping."
 unp kea-$BVERSION.tar.gz
+rm kea-$BVERSION.tar.gz
 cd kea-$BVERSION
 echo "Configuring."
 ./configure
