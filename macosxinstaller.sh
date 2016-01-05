@@ -16,7 +16,7 @@ echo $VERSIONTEXT
 echo "This installer was created by hiccup01 (hiccup01.com)"
 if [[ "X$CVERSION" -gt "X$BVERSIONSAFE" ]]; then
 	echo "This version of the kea installer have not been tested with the latest version."
-	echo "Use the latest version? [y,N]"
+	echo "Use the latest version? [y,N](Type the version of a kea release to install it.)"
 read input
 if [ $input == "Y" || $input == "y" || $input == "yes" ]
 then
