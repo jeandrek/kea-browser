@@ -1,6 +1,7 @@
 # Kea Browser
 
-[![Join the chat at https://gitter.im/Jonathan50/kea-browser](https://badges.gitter.im/Jonathan50/kea-browser.svg)](https://gitter.im/Jonathan50/kea-browser?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/Jonathan50/kea-browser](https://badges.gitter.im/Jonathan50/kea-browser.svg)](https://gitter.im/Jonathan50/kea-browser?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge). 
+
 A lightweight WebKit-based browser for the web  
 
 ## Installation
