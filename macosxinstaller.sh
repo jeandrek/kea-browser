@@ -3,7 +3,7 @@
 #The first digit of the version number will always be the first digit of the browser version number.
 VERSIONTEXT="You are running Mac OSX kea installer version $VERSION written by hiccup01 for kea version $BVERSION."
 CVERSION= curl https://raw.githubusercontent.com/Jonathan50/kea-browser/master/version.txt #File with current version in it.
-VERSION="0.0.1" #Installer version.
+VERSION="0.0.3" #Installer version.
 BVERSION="0.2.3" #Browser version that the installer has been tested for.
 BVERSIONSAFE="023"
 echo "Thanks for installing kea"
