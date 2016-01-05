@@ -1,13 +1,12 @@
 #!/bin/bash
 #This is a shell script created by hiccup01 to install kea on Mac OSX.
 #The first digit of the version number will always be the first digit of the browser version number.
-VERSIONTEXT="You are running Mac OSX kea installer version $VERSION written by hiccup01 for kea version $BVERSION."
 CVERSION= curl https://raw.githubusercontent.com/Jonathan50/kea-browser/master/version.txt #File with current version in it.
 VERSION="0.0.3" #Installer version.
 BVERSION="0.2.3" #Browser version that the installer has been tested for.
 BVERSIONSAFE="023"
 echo "Thanks for installing kea"
-echo $VERSIONTEXT
+echo "You are running Mac OSX kea installer version $VERSION written by hiccup01 for kea version $BVERSION."
 echo "This installer was created by hiccup01 (hiccup01.com)"
 if [[ "X$CVERSION" -gt "X$BVERSIONSAFE" ]]; then
 	echo "This version of the kea installer have not been tested with the latest version."
