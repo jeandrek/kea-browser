@@ -1,18 +1,41 @@
 #!/bin/bash
 #This is a shell script created by hiccup01 to install kea on Mac OSX.
 #The first digit of the version number will always be the first digit of the browser version number.
-VERSION="0.0.1" #Installer version
-BVERSION="0.2.3" #Browser version
+
+
+
+
+VERSIONTEXT="You are running Mac OSX kea installer version $VERSION for kea version $BVERSION."
+CVERSION= curl https://raw.githubusercontent.com/Jonathan50/kea-browser/master/version.txt #File with current version in it.
+VERSION="0.0.1" #Installer version.
+BVERSION="0.2.3" #Browser version that the installer has been tested for.
+BVERSIONSAFE="023"
 echo "Thanks for installing kea"
-echo "You are running Mac OSX kea installer version $VERSION for kea version $BVERSION."
+
+echo $VERSIONTEXT
 echo "This installer was created by hiccup01 (hiccup01.com)"
+if [[ "X$CVERSION" -gt "X$BVERSIONSAFE" ]]; then
+	echo "This version of the kea installer have not been tested with the latest version."
+	echo "Use the latest version? [y,N]"
+read input
+if [ $input == "Y" || $input == "y" || $input == "yes" ]
+then
+  echo "Using latest version..."
+elif [ $input == "N" || $input == "n" || $input == "no" ]
+then
+  echo "Using safe version..."
+else
+  echo "Using version $input"
+  BVERSION="$input"
+fi
+fi
 sleep 1 
 echo "At some points you may be prompted to enter your password. Type it and press \"enter\". (It will not display your password on screen)"
 sleep 3
 echo "Attempting to install brew package mananger, if brew is already installed this will have no effect"
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 echo "Installing kea dependencies"
-brew install webkitgtk unp wget
+brew install webkitgtk unp wget gnu-tar gzip 
 read -p "What directory would like to install kea in? The default and recommended is ~" DIRECTORY #Ask for user input
 if [ -n "$DIRECTORY" ]; then
 	echo "Installing in directory $DIRECTORY"
