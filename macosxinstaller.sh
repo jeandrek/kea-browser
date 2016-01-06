@@ -30,14 +30,7 @@ echo "Attempting to install brew package mananger, if brew is already installed 
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 echo "Installing kea dependencies"
 brew install webkitgtk unp wget gnu-tar 
-read -p "What directory would like to install kea in? The default and recommended is ~" directory #Ask for user input
-if [ -n "$directory" ]
-then
-	echo "Installing in directory $directory"
-else
-	echo "Defaulting. Installing in ~"
-	$directory="~"
-fi
+$directory="~"
 cd $directory
 echo "Creating directory."
 mkdir "kea"
