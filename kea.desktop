@@ -1,9 +1,0 @@
-[Desktop Entry]
-Version=0.3.0
-Type=Application
-Name=Kea
-Exec=kea
-Comment=Kea Web Browser
-Icon=kea
-Terminal=false
-Category=Network
