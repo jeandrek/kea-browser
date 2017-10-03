@@ -39,20 +39,26 @@
           <p>
             You are
             <script type="text/javascript">
-            document.write(
-              navigator.userAgent.indexOf("Kea/") > 0 ? '<b>using Kea</b>!':'<b>not using kea</b>.'
-            )
+            var match;
+            if ((match = navigator.userAgent.match(/Kea\/(\d+(?:\.\d+)+)/)))
+              document.write('<strong>using Kea ' + match[1] + '</strong>');
+            else
+              document.write('<strong>not using Kea</strong>!');
             </script>
           </p>
           <p>
             Your user agent is:<br>
-            <code id="ua"><script type="text/javascript">document.write(navigator.userAgent)</script></code>
+            <code id="ua">
+              <script type="text/javascript">
+              document.write(navigator.userAgent)
+              </script>
+            </code>
           </p>
         </p>
       </section>
       <hr>
       <footer>
-        <p>Copyright &copy; 2015 Kea Browser</p>
+        <p>Copyright &copy; 2015-2017 Kea Browser</p>
         <p>
           <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
             <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png">
