@@ -47,7 +47,7 @@ int kiosk = 0;
 int
 main(int argc, char **argv)
 {
-  char *start_page;
+  char *start_page = NULL;
   GtkBuilder *builder;
 
   gtk_init(&argc, &argv);
@@ -64,7 +64,7 @@ main(int argc, char **argv)
       printf("%s: unrecognized option '%s'\n", argv[0], argv[i]);
     }
   }
-  if(start_page[0] == '\0')
+  if(!start_page || start_page[0] == '\0')
     start_page = (char *)"http://jonathan50.github.io/kea-browser/";
 
   // load the interface
