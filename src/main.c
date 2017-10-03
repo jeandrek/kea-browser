@@ -31,6 +31,7 @@ void make_tab(GtkNotebook *notebook, char *uri);
 void remove_tab(GtkWidget *widget, gpointer data);
 void change_current_tab(GtkWidget *widget, int index, gpointer data);
 void go(GtkWidget *widget, gpointer data);
+void navigate(WebKitWebView *web_view, const char *uri);
 void go_back(GtkWidget *widget, gpointer data);
 void go_forward(GtkWidget *widget, gpointer data);
 void web_view_load_changed(GtkWidget *widget, WebKitLoadEvent load_event, gpointer data);
@@ -135,14 +136,14 @@ make_tab(GtkNotebook *notebook, char *uri)
   gtk_widget_show_all(label);
   gtk_notebook_append_page(GTK_NOTEBOOK(notebook), web_view, label);
 
-  webkit_web_view_load_uri(WEBKIT_WEB_VIEW(web_view), uri);
+  navigate(WEBKIT_WEB_VIEW(web_view), uri);
 }
 
 // remove a tab
 void
 remove_tab(GtkWidget *widget, gpointer data)
 {
-  // grrr
+  // ???
 }
 
 // update URL bar on switching tab
@@ -154,7 +155,7 @@ change_current_tab(GtkWidget *widget, int index, gpointer data)
                                                                                        index))));
 }
 
-// navigate to a page
+// navigate to the page in the URL bar
 void
 go(GtkWidget *widget, gpointer data)
 {
@@ -165,11 +166,23 @@ go(GtkWidget *widget, gpointer data)
                                                        gtk_notebook_get_current_page(GTK_NOTEBOOK(tabs))));
   g_strlcpy(uri, gtk_entry_get_text(GTK_ENTRY(entry_url_bar)), MAX_URI_SIZE);
   // if the URL is "", just reload the current page
-  if(g_strcmp0("", uri) == 0) {
+  if(uri[0] == '\0') {
     g_strlcpy(uri, webkit_web_view_get_uri(web_view), MAX_URI_SIZE);
   }
 
-  webkit_web_view_load_uri(web_view, uri);
+  navigate(web_view, uri);
+}
+
+void
+navigate(WebKitWebView *web_view, const char *uri)
+{
+  if(!strncmp(uri, "about:", 6)) {
+    char new_uri[64];
+    g_strlcpy(new_uri, "kea-", 64);
+    g_strlcat(new_uri, uri, 64);
+    navigate(web_view, new_uri);
+  } else
+    webkit_web_view_load_uri(web_view, uri);
 }
 
 // go backwards/forwards
@@ -207,8 +220,13 @@ web_view_load_changed(GtkWidget *widget, WebKitLoadEvent load_event, gpointer da
   case WEBKIT_LOAD_STARTED:
     gtk_spinner_start(GTK_SPINNER(spinner_loading));
   case WEBKIT_LOAD_REDIRECTED:
-    gtk_entry_set_text(GTK_ENTRY(entry_url_bar),
-                       webkit_web_view_get_uri(WEBKIT_WEB_VIEW(widget)));
+    {
+      const char *uri = webkit_web_view_get_uri(WEBKIT_WEB_VIEW(widget));
+      if (!strncmp(uri, "kea-about:", 10))
+	gtk_entry_set_text(GTK_ENTRY(entry_url_bar), uri + 4);
+      else
+	gtk_entry_set_text(GTK_ENTRY(entry_url_bar), uri);
+    }
     break;
   case WEBKIT_LOAD_FINISHED:
     gtk_spinner_stop(GTK_SPINNER(spinner_loading));

@@ -29,7 +29,6 @@
 static void
 about_protocol_request(WebKitURISchemeRequest *request, gpointer data)
 {
-  g_warning("yey it works:DD");
   GInputStream *stream;
   size_t length;
   const char *path;
@@ -40,8 +39,10 @@ about_protocol_request(WebKitURISchemeRequest *request, gpointer data)
 
   path = webkit_uri_scheme_request_get_path(request);
   g_strlcpy(filename, DATA_DIR "/", 64);
-  g_strlcat(filename, path, 64);
-  g_warning("%s, %s", filename, path);
+  if (path[0] != '\0')
+    g_strlcat(filename, path, 64);
+  else
+    g_strlcat(filename, "version.html", 64);
 
   GError *err = NULL;
   if(!g_file_get_contents(filename, &contents, &length, &err)) {
@@ -59,8 +60,7 @@ about_protocol_request(WebKitURISchemeRequest *request, gpointer data)
 void
 register_schemes(WebKitWebContext *context)
 {
-  webkit_web_context_register_uri_scheme(context, "about",
+  webkit_web_context_register_uri_scheme(context, "kea-about",
                                          about_protocol_request,
                                          NULL, NULL);
-  g_warning("plz work plz work :O");
 }
