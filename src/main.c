@@ -130,7 +130,7 @@ make_tab(GtkNotebook *notebook, char *uri)
   close_button = gtk_button_new_from_icon_name("gtk-close",
                                                GTK_ICON_SIZE_MENU);
   gtk_button_set_relief(GTK_BUTTON(close_button), GTK_RELIEF_NONE);
-  g_signal_connect(close_button, "clicked", G_CALLBACK(remove_tab), NULL);
+  g_signal_connect(close_button, "clicked", G_CALLBACK(remove_tab), web_view);
   gtk_box_pack_start(GTK_BOX(label), close_button,
                      FALSE, FALSE, 0);
 
@@ -153,7 +153,7 @@ void
 remove_tab(GtkWidget *widget, gpointer data)
 {
   gtk_notebook_remove_page(GTK_NOTEBOOK(tabs),
-			   gtk_notebook_get_current_page(GTK_NOTEBOOK(tabs)));
+			   gtk_notebook_page_num(GTK_NOTEBOOK(tabs), GTK_WIDGET(data)));
 
   if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(tabs)) < 1 && !kiosk)
     gtk_main_quit();
