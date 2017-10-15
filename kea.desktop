@@ -1,9 +1,9 @@
 [Desktop Entry]
-Version=0.2.5
+Version=0.2.6
 Type=Application
 Name=Kea
 Exec=kea
 Comment=Kea Web Browser
 Icon=kea
 Terminal=false
-Category=Network
+Categories=Network
