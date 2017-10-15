@@ -1,6 +1,6 @@
 /*
   Kea Browser
-  Copyright (C) 2015 Kea Browser
+  Copyright (C) 2015-2017 Kea Browser
 
   This file is part of Kea Browser.
 

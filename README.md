@@ -20,6 +20,3 @@ Run the automated shell script with this command
 ```sh
 curl https://raw.githubusercontent.com/Jonathan50/kea-browser/master/macosxinstaller.sh | sh
 ```
-#### Windows
-TBA  
-Windows currently not supported. Use GTK+ in the mean time.

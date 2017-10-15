@@ -4,8 +4,30 @@
     <title>About Kea</title>
   </head>
   <body>
-    <!-- TODO: This should not assume Kea version -->
     <img src="kea-about:kea.png" style="width: 20%;">
-    <h1>Kea version 0.2.5</h1>
+    <script>
+      var version = navigator.userAgent.match(/Kea\/(\d+(?:\.\d+)+)/)[1];
+      document.write("<h1>Kea version " + version + "</h1>");
+    </script>
+    <p>
+      Copyright &copy 2015-2017 Kea Browser.
+    </p>
+    <p>
+      Kea Browser is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+    </p>
+    <p>
+      Kea Browser is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+    </p>
+    <p>
+      You should have received a copy of the GNU General Public License
+      along with Kea Browser.  If not, see <a href="http://www.gnu.org/licenses/">
+      http://www.gnu.org/licenses/</a>.
+    </p>
   </body>
 </html>

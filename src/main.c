@@ -1,6 +1,6 @@
 /*
   Kea Browser
-  Copyright (C) 2015 Kea Browser
+  Copyright (C) 2015-2017 Kea Browser
 
   This file is part of Kea Browser.
 
@@ -28,12 +28,13 @@
 #include "protocols.h"
 
 void make_tab(GtkNotebook *notebook, char *uri);
-void remove_tab(GtkWidget *widget, gpointer data);
 void change_current_tab(GtkWidget *widget, int index, gpointer data);
 void go(GtkWidget *widget, gpointer data);
 void navigate(WebKitWebView *web_view, const char *uri);
 void go_back(GtkWidget *widget, gpointer data);
 void go_forward(GtkWidget *widget, gpointer data);
+void new_tab(GtkWidget *widget, gpointer data);
+void remove_tab(GtkWidget *widget, gpointer data);
 void web_view_load_changed(GtkWidget *widget, WebKitLoadEvent load_event, gpointer data);
 void web_view_close(GtkWidget *widget, GtkWidget *window);
 gboolean delete_event(GtkWidget *widget, GdkEvent *event, gpointer data);
@@ -84,10 +85,11 @@ main(int argc, char **argv)
   tabs            = GTK_WIDGET(gtk_builder_get_object(builder, "tabs"));
 
   gtk_builder_add_callback_symbols(builder, "go", G_CALLBACK(go),
-                                   "go_back", G_CALLBACK(go_back),
-                                   "go_forward", G_CALLBACK(go_forward),
-                                   "change_current_tab", G_CALLBACK(change_current_tab),
-                                   "delete_event", G_CALLBACK(delete_event), NULL);
+				   "go_back", G_CALLBACK(go_back),
+				   "go_forward", G_CALLBACK(go_forward),
+				   "new_tab", G_CALLBACK(new_tab),
+				   "change_current_tab", G_CALLBACK(change_current_tab),
+				   "delete_event", G_CALLBACK(delete_event), NULL);
   gtk_builder_connect_signals(builder, NULL);
   g_object_unref(G_OBJECT(builder));
 
@@ -139,11 +141,22 @@ make_tab(GtkNotebook *notebook, char *uri)
   navigate(WEBKIT_WEB_VIEW(web_view), uri);
 }
 
+// add a new tab
+void
+new_tab(GtkWidget *widget, gpointer data)
+{
+  make_tab(GTK_NOTEBOOK(tabs), "about:blank");
+}
+
 // remove a tab
 void
 remove_tab(GtkWidget *widget, gpointer data)
 {
-  // ???
+  gtk_notebook_remove_page(GTK_NOTEBOOK(tabs),
+			   gtk_notebook_get_current_page(GTK_NOTEBOOK(tabs)));
+
+  if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(tabs)) < 1 && !kiosk)
+    gtk_main_quit();
 }
 
 // update URL bar on switching tab
@@ -152,7 +165,7 @@ change_current_tab(GtkWidget *widget, int index, gpointer data)
 {
   gtk_entry_set_text(GTK_ENTRY(entry_url_bar),
                      webkit_web_view_get_uri(WEBKIT_WEB_VIEW(gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabs),
-                                                                                       index))));
+										       index))));
 }
 
 // navigate to the page in the URL bar
@@ -211,10 +224,13 @@ go_forward(GtkWidget *widget, gpointer data) {
 void
 web_view_load_changed(GtkWidget *widget, WebKitLoadEvent load_event, gpointer data)
 {
-  // if this is not the active tab do nothing
+  const char *title;
+  GtkWidget *label;
+
+  // if this is not the active tab do not change the URL bar
   if(gtk_notebook_page_num(GTK_NOTEBOOK(tabs), widget) !=
      gtk_notebook_get_current_page(GTK_NOTEBOOK(tabs)))
-    return;
+    goto change_title; // TODO: Fix this pls! :-)
 
   switch(load_event) {
   case WEBKIT_LOAD_STARTED:
@@ -233,12 +249,11 @@ web_view_load_changed(GtkWidget *widget, WebKitLoadEvent load_event, gpointer da
     break;
   }
 
-  const char *title;
+change_title:
   title = webkit_web_view_get_title(WEBKIT_WEB_VIEW(widget));
   if(title == NULL)
     title = webkit_web_view_get_uri(WEBKIT_WEB_VIEW(widget));
 
-  GtkWidget *label;
   label = gtk_notebook_get_tab_label(GTK_NOTEBOOK(tabs), widget);
   gtk_label_set_text(GTK_LABEL(gtk_container_get_children(GTK_CONTAINER(label))->data),
                      title);
@@ -250,6 +265,9 @@ web_view_close(GtkWidget *widget, GtkWidget *window)
 {
   gtk_notebook_remove_page(GTK_NOTEBOOK(tabs),
                            gtk_notebook_page_num(GTK_NOTEBOOK(tabs), widget));
+
+  if (gtk_notebook_get_n_pages(GTK_NOTEBOOK(tabs)) < 1)
+    gtk_main_quit();
 }
 
 gboolean
