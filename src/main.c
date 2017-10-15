@@ -28,7 +28,7 @@
 #include "protocols.h"
 
 void make_tab(GtkNotebook *notebook, char *uri);
-void change_current_tab(GtkWidget *widget, int index, gpointer data);
+void change_current_tab(GtkWidget *widget, GtkWidget *page, guint page_num, gpointer data);
 void go(GtkWidget *widget, gpointer data);
 void navigate(WebKitWebView *web_view, const char *uri);
 void go_back(GtkWidget *widget, gpointer data);
@@ -161,11 +161,14 @@ remove_tab(GtkWidget *widget, gpointer data)
 
 // update URL bar on switching tab
 void
-change_current_tab(GtkWidget *widget, int index, gpointer data)
+change_current_tab(GtkWidget *widget, GtkWidget *page, guint page_num, gpointer data)
 {
-  gtk_entry_set_text(GTK_ENTRY(entry_url_bar),
-                     webkit_web_view_get_uri(WEBKIT_WEB_VIEW(gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabs),
-										       index))));
+  const char *uri;
+
+  uri = webkit_web_view_get_uri(WEBKIT_WEB_VIEW(gtk_notebook_get_nth_page(GTK_NOTEBOOK(tabs),
+									 page_num)));
+
+  gtk_entry_set_text(GTK_ENTRY(entry_url_bar), uri);
 }
 
 // navigate to the page in the URL bar

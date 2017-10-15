@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.18.3 -->
 <!--
   Kea Browser
-  Copyright (C) 2015 Kea Browser
+  Copyright (C) 2015-2017 Kea Browser
 
   This file is part of Kea Browser.
 
@@ -159,7 +159,6 @@
           <object class="GtkNotebook" id="tabs">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <signal name="change-current-page" handler="change_current_tab" swapped="no"/>
             <signal name="switch-page" handler="change_current_tab" swapped="no"/>
           </object>
           <packing>
